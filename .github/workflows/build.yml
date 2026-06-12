@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  build_java_version: 21
+  build_java_version: 25
 
 jobs:
   build:
@@ -22,7 +22,7 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ env.build_java_version }}
       - name: Set Up Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
       - name: Build
         run: ./gradlew build
       - name: Check project files unmodified
@@ -48,6 +48,7 @@ jobs:
           - 11
           - 17
           - 21
+          - 25
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -63,7 +64,7 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.test_java_version }}
       - name: Provide installed JDKs
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         id: provideJdkPaths
         with:
           script: |
@@ -78,7 +79,7 @@ jobs:
               }
             }
       - name: Set Up Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
       - name: Test
         run: ./gradlew test -PallTests -PtestJavaVersion=${{ matrix.test_java_version }} "-Porg.gradle.java.installations.paths=${{ env.test_jdk_path }}"
         env:
@@ -97,6 +98,7 @@ jobs:
           - 11
           - 17
           - 21
+          - 25
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -112,7 +114,7 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.test_java_version }}
       - name: Provide installed JDKs
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         id: provideJdkPaths
         with:
           script: |
@@ -127,7 +129,7 @@ jobs:
               }
             }
       - name: Set Up Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
       - name: Publish to Maven Local
         run: ./gradlew build -xtest -xspotbugsMain -xjavadoc publishToMavenLocal
         env:
